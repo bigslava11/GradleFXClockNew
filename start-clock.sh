@@ -30,8 +30,30 @@ done
 echo "X Server is ready."
 
 echo "Starting FXClock with JavaFX modules..."
-echo "========== SELKIES PROCESSES =========="
-ps aux | grep -Ei 'selkies|webrtc|nginx|java' || true
+# ==========================================
+# TEMPORARY SELKIES CONNECTION MONITOR
+# ==========================================
+
+(
+    count=0
+
+    while [ "$count" -lt 36 ]; do
+
+        echo "========== SESSION DIAGNOSTICS =========="
+        date
+
+        echo "========== PROCESS TREE =========="
+        ps -ef --forest
+
+        echo "========== ESTABLISHED CONNECTIONS =========="
+        ss -tnp state established 2>/dev/null || true
+
+        sleep 10
+        count=$((count + 1))
+
+    done
+
+) &
 exec java \
     -Dprism.order=sw \
     --module-path /opt/fxclock/lib \
