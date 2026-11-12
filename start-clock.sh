@@ -30,7 +30,8 @@ done
 echo "X Server is ready."
 
 echo "Starting FXClock with JavaFX modules..."
-
+echo "========== SELKIES PROCESSES =========="
+ps aux | grep -Ei 'selkies|webrtc|nginx|java' || true
 exec java \
     -Dprism.order=sw \
     --module-path /opt/fxclock/lib \
