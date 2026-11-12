@@ -30,8 +30,16 @@ USER 1000
 SHELL ["/usr/bin/fakeroot", "--", "/bin/sh", "-c"]
 
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends openjdk-25-jre && \
-    apt-get clean && \
+    apt-get install -y --no-install-recommends \
+        openjdk-22-jre \
+        libgtk-3-0 \
+        libgl1 \
+        libx11-6 \
+        libxext6 \
+        libxrender1 \
+        libxtst6 \
+        libxi6 \
+    && apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
 USER 0
