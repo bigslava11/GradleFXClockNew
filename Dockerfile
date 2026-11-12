@@ -1,4 +1,3 @@
-
 # ==========================================
 # STAGE 1: Build JavaFX application
 # ==========================================
@@ -56,14 +55,15 @@ RUN mkdir -p /etc/service/fxclock && \
     chown -R 1000:1000 /etc/service/fxclock && \
     chmod 755 /etc/service/fxclock
 
-COPY --chown=1000:1000 --chmod=755 \
-    start-clock.sh /etc/service/fxclock/run
+# Register JavaFX application as an s6 service
+COPY --chown=1000:1000 start-clock.sh /etc/service/fxclock/run
 
-# Fix Windows CRLF line endings
+# Normalize script and verify service registration
 RUN sed -i 's/\r$//' /etc/service/fxclock/run && \
-    chown -R 1000:1000 /etc/service/fxclock && \
     chmod 755 /etc/service/fxclock/run && \
-    test -x /etc/service/fxclock/run
+    test -f /etc/service/fxclock/run && \
+    test -x /etc/service/fxclock/run && \
+    ls -l /etc/service/fxclock/run
 
 # Return to desktop user
 USER 1000
