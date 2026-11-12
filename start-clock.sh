@@ -1,26 +1,25 @@
-#!/command/with-contenv bash
+#!/bin/sh
 
-set -Ee
+set -eu
 
-echo "=================================="
-echo "FXCLOCK STARTING"
-echo "=================================="
+echo "================================"
+echo "FXCLOCK SERVICE STARTING"
+echo "================================"
 
 export DISPLAY=:20
-export JAVA_TOOL_OPTIONS="-Dprism.order=sw"
 
-echo "Checking Java..."
+echo "Checking Java installation..."
 java -version
 
-echo "Checking application launcher..."
+echo "Checking JavaFX application..."
 
-if [ ! -x /opt/fxclock/bin/GradleFXClockNew ]; then
-    echo "ERROR: Application launcher missing!"
+if [ ! -f /opt/fxclock/bin/GradleFXClockNew ]; then
+    echo "ERROR: Application launcher not found!"
     ls -la /opt/fxclock/bin/
     exit 1
 fi
 
-echo "Application launcher found."
+echo "Application launcher exists."
 
 echo "Waiting for X Server..."
 
@@ -28,8 +27,8 @@ until [ -S /tmp/.X11-unix/X20 ]; do
     sleep 1
 done
 
-echo "X Server ready!"
+echo "X Server is ready."
 
-echo "Launching JavaFX application..."
+echo "Starting JavaFX application..."
 
 exec /opt/fxclock/bin/GradleFXClockNew
