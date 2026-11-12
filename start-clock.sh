@@ -8,15 +8,18 @@ echo "================================"
 
 export DISPLAY=:20
 
-echo "Java version:"
+echo "Checking Java..."
 java -version
 
 echo "Checking JavaFX libraries..."
 
 if [ ! -d /opt/fxclock/lib ]; then
-    echo "ERROR: Application libraries not found!"
+    echo "ERROR: JavaFX libraries not found!"
     exit 1
 fi
+
+echo "Available JavaFX libraries:"
+ls /opt/fxclock/lib/
 
 echo "Waiting for X Server..."
 
@@ -26,6 +29,12 @@ done
 
 echo "X Server is ready."
 
-echo "Starting FXClock..."
+echo "Starting FXClock with JavaFX modules..."
 
-exec /opt/fxclock/bin/GradleFXClockNew
+exec java \
+    -Dprism.order=sw \
+    --module-path /opt/fxclock/lib \
+    --add-modules javafx.controls,javafx.fxml,javafx.web,javafx.swing \
+    -cp "/opt/fxclock/lib/*" \
+    org.example.FXClock
+
