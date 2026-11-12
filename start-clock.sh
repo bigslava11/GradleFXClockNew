@@ -1,59 +1,35 @@
-
 #!/command/with-contenv bash
 
 set -Ee
 
-echo "=========================================="
-echo "FXCLOCK STARTUP SERVICE"
-echo "=========================================="
+echo "=================================="
+echo "FXCLOCK STARTING"
+echo "=================================="
 
-# Load Selkies session environment
-ENV_FILE="${XDG_RUNTIME_DIR:-/tmp/runtime-ubuntu}/container-env"
+export DISPLAY=:20
+export JAVA_TOOL_OPTIONS="-Dprism.order=sw"
 
-if [ -f "$ENV_FILE" ]; then
-    echo "Loading Selkies environment..."
-    . "$ENV_FILE"
-else
-    echo "WARNING: Selkies environment file not found."
-fi
-
-# Configure display
-export DISPLAY="${DISPLAY:-:20}"
-
-echo "DISPLAY=$DISPLAY"
-
-# Configure JavaFX software rendering
-export JAVA_TOOL_OPTIONS="${JAVA_TOOL_OPTIONS:-} -Dprism.order=sw"
-
-# Check Java
-echo "Checking Java installation..."
+echo "Checking Java..."
 java -version
 
-# Check application
-echo "Checking JavaFX application..."
+echo "Checking application launcher..."
 
 if [ ! -x /opt/fxclock/bin/GradleFXClockNew ]; then
-    echo "ERROR: JavaFX launcher not found!"
+    echo "ERROR: Application launcher missing!"
     ls -la /opt/fxclock/bin/
     exit 1
 fi
 
-echo "JavaFX launcher found."
+echo "Application launcher found."
 
-# Wait for X Server
 echo "Waiting for X Server..."
 
-DISPLAY_NUMBER="${DISPLAY#*:}"
-
-until [ -S "/tmp/.X11-unix/X${DISPLAY_NUMBER}" ]; do
+until [ -S /tmp/.X11-unix/X20 ]; do
     sleep 1
 done
 
-echo "X Server is ready!"
+echo "X Server ready!"
 
-# Launch JavaFX
-echo "=========================================="
-echo "STARTING GRADLE FX CLOCK"
-echo "=========================================="
+echo "Launching JavaFX application..."
 
 exec /opt/fxclock/bin/GradleFXClockNew
