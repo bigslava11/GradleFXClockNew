@@ -52,14 +52,16 @@ COPY --from=builder --chown=1000:1000 \
 # Register JavaFX startup service
 # ==========================================
 
-RUN mkdir -p /etc/service/fxclock
+RUN mkdir -p /etc/service/fxclock && \
+    chown -R 1000:1000 /etc/service/fxclock && \
+    chmod 755 /etc/service/fxclock
 
 COPY --chown=1000:1000 --chmod=755 \
     start-clock.sh /etc/service/fxclock/run
 
-RUN ls -la /etc/service/fxclock/ && \
-    test -x /etc/service/fxclock/run && \
-    test -x /opt/fxclock/bin/GradleFXClockNew
+RUN chown -R 1000:1000 /etc/service/fxclock && \
+    chmod 755 /etc/service/fxclock/run && \
+    test -x /etc/service/fxclock/run
 
 # Return to desktop user
 USER 1000
