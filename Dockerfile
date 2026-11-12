@@ -59,7 +59,9 @@ RUN mkdir -p /etc/service/fxclock && \
 COPY --chown=1000:1000 --chmod=755 \
     start-clock.sh /etc/service/fxclock/run
 
-RUN chown -R 1000:1000 /etc/service/fxclock && \
+# Fix Windows CRLF line endings
+RUN sed -i 's/\r$//' /etc/service/fxclock/run && \
+    chown -R 1000:1000 /etc/service/fxclock && \
     chmod 755 /etc/service/fxclock/run && \
     test -x /etc/service/fxclock/run
 
