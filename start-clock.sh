@@ -11,15 +11,15 @@ export DISPLAY=:20
 echo "Checking Java installation..."
 java -version
 
-echo "Checking application installation..."
+echo "Checking JavaFX distribution..."
 
-if [ ! -f /opt/fxclock/lib/javafx-controls-24.0.2-linux.jar ]; then
-    echo "JavaFX Controls JAR not found!"
-    ls -la /opt/fxclock/lib/
+if [ ! -d /opt/fxclock/lib ]; then
+    echo "ERROR: JavaFX library directory not found!"
     exit 1
 fi
 
-echo "JavaFX dependencies found."
+echo "Available application libraries:"
+ls -la /opt/fxclock/lib/
 
 echo "Waiting for X Server..."
 
@@ -37,4 +37,3 @@ exec java \
     --add-modules javafx.controls,javafx.fxml,javafx.web,javafx.swing \
     -cp "/opt/fxclock/lib/*" \
     org.example.FXClock
-
