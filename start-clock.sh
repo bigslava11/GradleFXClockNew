@@ -7,7 +7,17 @@ echo "=========================================="
 echo "FXCLOCK STARTUP SERVICE"
 echo "=========================================="
 
-# JavaFX display configuration
+# Load Selkies session environment
+ENV_FILE="${XDG_RUNTIME_DIR:-/tmp/runtime-ubuntu}/container-env"
+
+if [ -f "$ENV_FILE" ]; then
+    echo "Loading Selkies environment..."
+    . "$ENV_FILE"
+else
+    echo "WARNING: Selkies environment file not found."
+fi
+
+# Configure display
 export DISPLAY="${DISPLAY:-:20}"
 
 echo "DISPLAY=$DISPLAY"
@@ -15,12 +25,11 @@ echo "DISPLAY=$DISPLAY"
 # Configure JavaFX software rendering
 export JAVA_TOOL_OPTIONS="${JAVA_TOOL_OPTIONS:-} -Dprism.order=sw"
 
-# Check Java installation
+# Check Java
 echo "Checking Java installation..."
-
 java -version
 
-# Check application launcher
+# Check application
 echo "Checking JavaFX application..."
 
 if [ ! -x /opt/fxclock/bin/GradleFXClockNew ]; then
@@ -42,7 +51,7 @@ done
 
 echo "X Server is ready!"
 
-# Start JavaFX application
+# Launch JavaFX
 echo "=========================================="
 echo "STARTING GRADLE FX CLOCK"
 echo "=========================================="
